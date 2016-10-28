@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,12 +9,12 @@ namespace PolyABC
 {
     public class Crypt
     {
-        private static char[] arrayAlphabet = new char[29];
-        private static char[,] arrayVigenere = new char[27, 27];
-        private static List<int> listeKey = new List<int>();
-        private static List<int> listeKlarText = new List<int>();
-        private static List<string> listeTempKey = new List<string>();
-        private static List<string> listeCodierterText = new List<string>();
+        private static char[] _arrayAlphabet = new char[29];
+        private static char[,] _arrayVigenere = new char[27, 27];
+        private static List<int> _listeKey = new List<int>();
+        private static List<int> _listeKlarText = new List<int>();
+        private static List<string> _listeTempKey = new List<string>();
+        private static List<string> _listeCodierterText = new List<string>();
 
         private static string _kodierterText = string.Empty;
         private static string _deKodierterText = string.Empty;
@@ -21,27 +22,27 @@ namespace PolyABC
 
         private static void Clear()
         {
-            listeKey.Clear();
-            listeKlarText.Clear();
-            listeTempKey.Clear();
+            _listeKey.Clear();
+            _listeKlarText.Clear();
+            _listeTempKey.Clear();
         }
 
         private static void ArrayAlphabetErstellen()
         {
             char chrLetterTemp = 'A';
-            arrayAlphabet[0] = '[';
+            _arrayAlphabet[0] = '[';
             for (int i = 1; i <= 26; i++)
             {
 
-                arrayAlphabet[i] = chrLetterTemp;
+                _arrayAlphabet[i] = chrLetterTemp;
                 if (chrLetterTemp == '[')
                 {
                     chrLetterTemp = 'A';
                 }
                 chrLetterTemp++;
             }
-            arrayAlphabet[27] = ']';
-            arrayAlphabet[28] = ' ';
+            _arrayAlphabet[27] = ']';
+            _arrayAlphabet[28] = ' ';
         }
 
         private static void ArrayVigenereErstellen()
@@ -56,7 +57,7 @@ namespace PolyABC
 
                     if (i != 26)
                     {
-                        arrayVigenere[j, i] = chrLetterTemp;
+                        _arrayVigenere[j, i] = chrLetterTemp;
                         chrLetterTemp++;
                         if (chrLetterTemp == '[')
                         {
@@ -65,7 +66,7 @@ namespace PolyABC
                     }
                     else
                     {
-                        arrayVigenere[j, i] = ' ';
+                        _arrayVigenere[j, i] = ' ';
                     }
                 }
                 chrLetter++;
@@ -97,14 +98,15 @@ namespace PolyABC
 
             ArrayAlphabetErstellen();
             ArrayVigenereErstellen();
+
             Clear();
             //Der Key darf nur aus zusammenhängenden Zeichen, also ohne Leerzeichen, bestehen
             string[] strTrennen = strKey.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
             if (strTrennen.Length > 0)
             {
                 if (TestString(strTrennen[0].ToString()) && TestString(strKlarText))
                 {
-                    //strTrennen = strKlarText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     strTrennen[0] = strKlarText;
                     foreach (string wort in strTrennen)
                     {
@@ -113,11 +115,11 @@ namespace PolyABC
                         TextToNumber(wort, strKey);
                         DoCodieren();
                     }
-                    foreach (string codiertesWort in listeCodierterText)
+                    foreach (string codiertesWort in _listeCodierterText)
                     {
                         strCodiert += " " + codiertesWort;
                     }
-                    listeCodierterText.Clear();
+                    _listeCodierterText.Clear();
                 }
             }
             else
@@ -132,7 +134,7 @@ namespace PolyABC
             char[] arrayChar = text.ToCharArray();
             foreach (char item in arrayChar)
             {
-                if (!arrayAlphabet.Contains(item))
+                if (!_arrayAlphabet.Contains(item))
                 {
                     errorLog = "Es sind nur Buchstaben erlaubt. Umlaute werden noch nicht unterstützt!";
                     return false;
@@ -177,31 +179,31 @@ namespace PolyABC
                     string decodiert = string.Empty;
                     TextToNumber(strCodiert, strKey);
 
-                    for (int i = 0; i <= listeKlarText.Count - 1; i++)
+                    for (int i = 0; i <= _listeKlarText.Count - 1; i++)
                     {
-                        if (listeKlarText[i] >= 0) listeKlarText[i] = listeKlarText[i] + 65;
+                        if (_listeKlarText[i] >= 0) _listeKlarText[i] = _listeKlarText[i] + 65;
                     }
 
                     int intLengthOfText = 0;
 
                     do
                     {
-                        foreach (int x in listeKey)
+                        foreach (int x in _listeKey)
                         {
-                            if (intLengthOfText <= listeKlarText.Count - 1)
+                            if (intLengthOfText <= _listeKlarText.Count - 1)
                             {
                                 for (int count = 0; count <= 26; count++)
                                 {
-                                    int test = arrayVigenere[x, count];
-                                    if (test == listeKlarText[intLengthOfText] || test == 32)
+                                    int test = _arrayVigenere[x, count];
+                                    if (test == _listeKlarText[intLengthOfText] || test == 32)
                                     {
                                         if (test == 32)
                                         {
-                                            decodiert += arrayAlphabet[count + 2];
+                                            decodiert += _arrayAlphabet[count + 2];
                                         }
                                         else
                                         {
-                                            decodiert += arrayAlphabet[count + 1];
+                                            decodiert += _arrayAlphabet[count + 1];
                                         }
 
                                         break;
@@ -214,7 +216,7 @@ namespace PolyABC
                                 break;
                             }
                         }
-                    } while (intLengthOfText <= listeKlarText.Count - 1);
+                    } while (intLengthOfText <= _listeKlarText.Count - 1);
                     DeKodierterText = decodiert;
                 }
             }
@@ -232,18 +234,18 @@ namespace PolyABC
 
         private static void DoCodieren()
         {
-            listeTempKey.Clear();
+            _listeTempKey.Clear();
             string strCodierterText = "";
 
             int i = 0;
             //Für jedes char in listeKlarText wird ein Element aus der listeKey in die listeTempKey geschrieben, 
             //wenn die listeKey zuende ist, wird von vorne angefangen.
-            foreach (char element in listeKlarText)
+            foreach (char element in _listeKlarText)
             {
-                if (i < listeKey.Count)
+                if (i < _listeKey.Count)
                 {
 
-                    listeTempKey.Add(listeKey.ElementAt(i).ToString());
+                    _listeTempKey.Add(_listeKey.ElementAt(i).ToString());
                     i++;
                     //Das else löst aus, wenn i = der Anzahl der Elemente in listeKey ist, d.h. der Key zum verschlüsseln ist am Ende angelangt
                     //und es muss wieder von vorne begonnen werden
@@ -251,7 +253,7 @@ namespace PolyABC
                 else
                 {
                     i = 0;
-                    listeTempKey.Add(listeKey.ElementAt(i).ToString());
+                    _listeTempKey.Add(_listeKey.ElementAt(i).ToString());
                     i++;
                 }
 
@@ -263,11 +265,11 @@ namespace PolyABC
             //listeTempKey die Nummer der Row in arrayVigenere und das Element aus der listeKlarText die Nummer der Column.
             //Daraus ergibt sich dann der verschlüsselte Buchstabe, welche dann in strCodierterText geschreiben wird.
             //Das wird jetzt mit jedem Element der listeTempKey(und damit auch der listeKlarText) gemacht.
-            foreach (string element in listeTempKey)
+            foreach (string element in _listeTempKey)
             {
-                if (listeKlarText.ElementAt(i) > -1)
+                if (_listeKlarText.ElementAt(i) > -1)
                 {
-                    strCodierterText += arrayVigenere[Convert.ToInt16(listeTempKey.ElementAt(i)), Convert.ToInt16(listeKlarText.ElementAt(i))].ToString();
+                    strCodierterText += _arrayVigenere[Convert.ToInt16(_listeTempKey.ElementAt(i)), Convert.ToInt16(_listeKlarText.ElementAt(i))].ToString();
                 }
                 else
                 {
@@ -276,7 +278,7 @@ namespace PolyABC
                 i++;
             }
             //Wenn alle Elemente durch sind, wird das Ergebis in die TextBox txtCodiert geschrieben
-            listeCodierterText.Add(strCodierterText);
+            _listeCodierterText.Add(strCodierterText);
             string strFertigerText = strCodierterText;
         }
 
@@ -288,7 +290,7 @@ namespace PolyABC
             foreach (char c in strKey)
             {
                 intBuchstabe = c - 65;
-                listeKey.Add(intBuchstabe);
+                _listeKey.Add(intBuchstabe);
             }
             //Jeden Char im KlarText in die listeKlarText schreiben
             intBuchstabe = 0;
@@ -296,7 +298,7 @@ namespace PolyABC
             {
                 intBuchstabe = c - 65;
                 if (intBuchstabe == -33) intBuchstabe = 26;
-                listeKlarText.Add(intBuchstabe);
+                _listeKlarText.Add(intBuchstabe);
             }
         }
     }
