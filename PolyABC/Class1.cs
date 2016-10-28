@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PolyABC
 {
-    public class Class1
+    public class PolyABC
     {
         private static char[] arrayAlphabet = new char[29];
         private static char[,] arrayVigenere = new char[27, 27];
