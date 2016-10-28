@@ -1,0 +1,5 @@
+j:\eigene dateien\documents\visual studio 2015\Projects\PolyABC\PolyABC\bin\Debug\PolyABC.dll
+j:\eigene dateien\documents\visual studio 2015\Projects\PolyABC\PolyABC\bin\Debug\PolyABC.pdb
+j:\eigene dateien\documents\visual studio 2015\Projects\PolyABC\PolyABC\obj\Debug\PolyABC.csprojResolveAssemblyReference.cache
+j:\eigene dateien\documents\visual studio 2015\Projects\PolyABC\PolyABC\obj\Debug\PolyABC.dll
+j:\eigene dateien\documents\visual studio 2015\Projects\PolyABC\PolyABC\obj\Debug\PolyABC.pdb
